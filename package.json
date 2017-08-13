@@ -1,0 +1,41 @@
+{
+  "name": "twilio-fax-tessel",
+  "version": "1.0.0",
+  "description": "Twilio Fax - Tessel printer",
+  "author": "Matthias Damm <mdamm@skillcamp.com>",
+  "main": "app.js",
+  "repository": "git@github.com:nash-md/tessel-fax-printer.git",
+  "bugs": "https://github.com/nash-md/tessel-fax-printer/issues",
+  "dependencies": {
+    "sharp": "^0.18.2",
+    "express": "^4.13.4",
+    "twilio": "^3.0.x",
+    "request": "^2.81.0",
+    "moment": "^2.18.1",
+    "async": "^2.5.0",
+    "get-pixels": "^3.3.0",
+    "node-cron": "^1.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.3.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-config-prettier": "^2.3.0",
+    "eslint-plugin-prettier": "^2.1.2",
+    "prettier": "^1.5.3"
+  },
+  "keywords": [
+    "Tessel",
+    "Printer",
+    "Twilio"
+  ],
+  "license": "MIT",
+  "readme": "Printing Twilio faxes with Tessel and a thermal printer",
+  "scripts": {
+    "prettier:base": "prettier --single-quote --trailing-comma es5",
+    "prettier:write": "npm run prettier:base -- --write",
+    "eslint": "eslint . || exit 0",
+    "format:js": "npm run prettier:write -- \"!(tools|node_modules)/**/*.js\"",
+    "test:js": "npm run eslint -- \"!(tools|node_modules)/**/*.js\"",
+    "test": "npm run test:js"
+  }
+}
