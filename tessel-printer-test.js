@@ -5,10 +5,10 @@ const printer = new Printer({ heatingTime: 120, heatingInterval: 3 });
 
 printer
   .init(tessel.port['A'])
-  .then(function() {
+  .then(() => {
     return printer.writeLine('Printed with Tessel');
   })
-  .then(function() {
+  .then(() => {
     return printer.print();
   })
   .then(printer => {

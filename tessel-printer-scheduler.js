@@ -29,22 +29,22 @@ cron.schedule('*/60 * * * *', function() {
         );
         printer
           .init(tessel.port['A'])
-          .then(function() {
+          .then(() => {
             return printer.setBold(true);
           })
-          .then(function() {
+          .then(() => {
             return printer.writeLine(fax.from + ' at ' + fax.date);
           })
-          .then(function() {
+          .then(() => {
             return printer.lineFeed(1);
           })
-          .then(function() {
+          .then(() => {
             return printer.writeImage(fax.source);
           })
-          .then(function() {
+          .then(() => {
             return printer.lineFeed(2);
           })
-          .then(function() {
+          .then(() => {
             return printer.print();
           })
           .then(printer => {
