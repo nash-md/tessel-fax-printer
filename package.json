@@ -10,7 +10,6 @@
     "sharp": "^0.18.2",
     "express": "^4.13.4",
     "twilio": "^3.0.x",
-    "request": "^2.81.0",
     "moment": "^2.18.1",
     "async": "^2.5.0",
     "get-pixels": "^3.3.0",

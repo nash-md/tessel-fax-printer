@@ -6,7 +6,7 @@ const moment = require('moment');
 const express = require('express');
 const sharp = require('sharp');
 const twilio = require('twilio');
-const request = require('request');
+const fetch = require('node-fetch');
 
 const client = new twilio(
   process.env.TWILIO_API_KEY_SID,
@@ -18,45 +18,38 @@ const client = new twilio(
 
 const app = express();
 
-app.get('/images/:sid', function(req, res) {
+app.get('/images/:sid', (req, res) => {
   client.fax
     .faxes(req.params.sid)
     .fetch()
-    .then(function(response) {
-      const source = path.join(__dirname, response.sid + '.tiff');
-      const stream = fs.createWriteStream(source);
+    .then(response => {
 
-      request
-        .get(response.mediaUrl)
-        .on('error', error => {
-          res.status(500).send('could not retrieve fax image');
-          console.error(error);
-        })
-        .pipe(stream);
+      return fetch(response.mediaUrl, { method: 'GET' })
+        .then(res => res.buffer())
+        .then(inputBuffer => {
+          /* resize image and output as PNG */
+          sharp(inputBuffer)
+            .resize(384)
+            .png()
+            .toBuffer()
+            .then(outputBuffer => {
+              res.set({ 'content-type': 'image/png' }).send(outputBuffer);
+            })
+            .catch(error => {
+              res.status(500).send('fax image conversion failed');
 
-      stream.on('finish', function() {
-        sharp(source)
-          .resize(384)
-          .png()
-          .toBuffer()
-          .then(buffer => {
-            res.set({ 'content-type': 'image/png' }).send(buffer);
-          })
-          .catch(error => {
-            res.status(500).send('fax image conversion failed');
+              console.error(error);
+            });
+        });
 
-            console.error(error);
-          });
-      });
     })
     .catch(error => {
       res.status(500).send('could not retrieve fax');
-
       console.error(error);
     });
 });
 
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   const listOfFaxes = [];
   const options = {
     to: process.env.TWILIO_FAX_NUMBER,
@@ -65,7 +58,7 @@ app.get('/', function(req, res) {
 
   client.fax.v1.faxes
     .list(options)
-    .then(function(response) {
+    .then(response => {
       response.forEach(fax => {
         if (fax.direction === 'inbound' && fax.status === 'received') {
           const imageUrl = `${req.protocol}://${req.hostname}/images/${fax.sid}`;
@@ -90,6 +83,6 @@ app.get('/', function(req, res) {
 
 const port = process.env.PORT || 5000;
 
-app.listen(port, function() {
+app.listen(port, () => {
   console.log('magic happens on port', port);
 });
