@@ -36,6 +36,8 @@
     "eslint": "eslint . || exit 0",
     "format:js": "npm run prettier:write -- \"!(tools|node_modules)/**/*.js\"",
     "test:js": "npm run eslint -- \"!(tools|node_modules)/**/*.js\"",
-    "test": "npm run test:js"
+    "test": "npm run test:js",
+    "start": "node .",
+    "start:dev": "nodenv -f ."
   }
 }
