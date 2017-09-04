@@ -56,7 +56,7 @@ cron.schedule('*/60 * * * *', function() {
             console.error(error);
           });
         },
-        function(error) {
+        (error) => {
           if (error) {
             console.error('printing faxes failed');
             console.error(error);
